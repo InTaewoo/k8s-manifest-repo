@@ -64,6 +64,7 @@ jobs:
         run: |
           pwd
           ls -al
+          echo $GITHUB_USERNAME
     
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
