@@ -60,16 +60,11 @@ jobs:
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
         
-      - name: test repo
-        run: |
-          pwd
-          ls -al
-          echo $GITHUB_USERNAME
     
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
         with:
-          repository: $GITHUB_USERNAME/k8s-manifest-repo
+          repository: InTaewoo/k8s-manifest-repo
           ref: master
           token: \${{ secrets.ACTION_TOKEN }}
           path: k8s-manifest-repo
