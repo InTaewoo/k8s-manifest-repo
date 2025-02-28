@@ -59,6 +59,11 @@ jobs:
 
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
+        
+      - name: test repo
+        run: |
+          pwd
+          ls -al
     
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
