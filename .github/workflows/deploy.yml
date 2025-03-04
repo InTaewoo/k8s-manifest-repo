@@ -19,15 +19,15 @@ jobs:
           distribution: temurin
           java-version: 17
       
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo systemctl start docker
-          sudo systemctl enable docker
+      # - name: Install Docker
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y docker.io
+      #     sudo systemctl start docker
+      #     sudo systemctl enable docker
 
       - name: application.yml 파일 만들기
-        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
+        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.ymlg
 
       - name: 테스트 및 빌드하기
         run: ./gradlew clean build
