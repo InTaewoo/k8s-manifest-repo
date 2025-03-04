@@ -4,6 +4,8 @@ images:
 - name: ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
   newName: ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
   newTag: abcdefg
+- name: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server
+  newTag: latest
 resources:
 - ../../base
 patchesStrategicMerge:
