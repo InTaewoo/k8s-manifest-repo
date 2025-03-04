@@ -99,5 +99,5 @@ jobs:
           cd k8s-manifest-repo
           git config --global user.email "oilehot0910@naver.com"
           git config --global user.name "Intaewoo"
-          git commit -am "Update image tag"
+          git commit -m "Update image tag"
           git push -u origin master
