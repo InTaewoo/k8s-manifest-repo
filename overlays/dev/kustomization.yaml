@@ -1,11 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- name: ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
-  newName: ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
-  newTag: abcdefg
-- name: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/
-  newName: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/
 - name: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server
   newName: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server
   newTag: 68ebe7dc
