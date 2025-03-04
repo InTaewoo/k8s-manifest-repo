@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: demo-frontend
-          image: ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+          image: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
