@@ -6,8 +6,9 @@ on:
       - master
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  build-and-deploy:
+    runs-on: self-hosted  # 내부망에서 실행
+
     steps:
       - name: Github Repository 파일 불러오기
         uses: actions/checkout@v4
@@ -44,23 +45,23 @@ jobs:
       - name: ECR에 Docker 이미지 Push하기
         run: docker push ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
 
-      - name: SSH로 EC2에 접속하기
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script_stop: true
-          script: |
-            docker stop instagram-server || true
-            docker rm instagram-server || true
-            docker pull ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
-            docker run -d --name instagram-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+      # - name: SSH로 EC2에 접속하기
+      #   uses: appleboy/ssh-action@v1.0.3
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ${{ secrets.EC2_USERNAME }}
+      #     key: ${{ secrets.EC2_PRIVATE_KEY }}
+      #     script_stop: true
+      #     script: |
+      #       docker stop instagram-server || true
+      #       docker rm instagram-server || true
+      #       docker pull ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+      #       docker run -d --name instagram-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
 
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
         
-    
+      
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
         with:
