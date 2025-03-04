@@ -73,20 +73,6 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-
-      # - name: SSH로 EC2에 접속하기
-      #   uses: appleboy/ssh-action@v1.0.3
-      #   with:
-      #     host: ${{ secrets.EC2_HOST }}
-      #     username: ${{ secrets.EC2_USERNAME }}
-      #     key: ${{ secrets.EC2_PRIVATE_KEY }}
-      #     script_stop: true
-      #     script: |
-      #       docker stop instagram-server || true
-      #       docker rm instagram-server || true
-      #       docker pull ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
-      #       docker run -d --name instagram-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
-
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
         
@@ -103,9 +89,9 @@ jobs:
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
-          echo ${{ steps.image-info.outputs.image_tag }}
+          echo ${{ steps.image.outputs.version }}
           cd k8s-manifest-repo/overlays/dev/
-          kustomize edit set image ${{ steps.login-ecr.outputs.registry }}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry }}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
+          kustomize edit set image ${{ steps.login-ecr.outputs.registry }}/instagram-server=${{ steps.login-ecr.outputs.registry }}/instagram-server:${{ steps.image.outputs.version }}
           cat kustomization.yaml
     
       - name: Commit files
