@@ -27,7 +27,7 @@ jobs:
       #     sudo systemctl enable docker
 
       - name: application.yml 파일 만들기
-        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.ymlg
+        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
 
       - name: 테스트 및 빌드하기
         run: ./gradlew clean build
@@ -46,14 +46,33 @@ jobs:
       - name: Check Docker Version
         run: docker version
        
-      - name: Docker 이미지 생성
-        run: docker build -t instagram-server .
+      # - name: Docker 이미지 생성
+      #   run: docker build -t instagram-server .
 
-      - name: Docker 이미지에 Tag 붙이기
-        run: docker tag instagram-server ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+      # - name: Docker 이미지에 Tag 붙이기
+      #   run: docker tag instagram-server ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
 
-      - name: ECR에 Docker 이미지 Push하기
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+      # - name: ECR에 Docker 이미지 Push하기
+      #   run: docker push ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+      
+      - name: 이미지 태그 (버전)
+        id: image
+        run: |
+          VERSION=$(echo ${{ github.sha }} | cut -c1-8)
+          echo VERSION=$VERSION
+          echo "::set-output name=version::$VERSION"
+
+      - name: ECR에 build, tag, push
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: instagram-server
+          IMAGE_TAG: ${{ steps.image.outputs.version }}
+        run: |
+          echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
+          echo "::set-output name=image_tag::$IMAGE_TAG"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
 
       # - name: SSH로 EC2에 접속하기
       #   uses: appleboy/ssh-action@v1.0.3
@@ -82,11 +101,11 @@ jobs:
     
       - name: Update Kubernetes resources
         run: |
-          echo ${{ steps.login-ecr.outputs.registry }}
-          echo ${{ steps.image-info.outputs.ecr_repository }}
-          echo ${{ steps.image-info.outputs.image_tag }}
+          echo \${{ steps.login-ecr.outputs.registry }}
+          echo \${{ steps.image-info.outputs.ecr_repository }}
+          echo \${{ steps.image-info.outputs.image_tag }}
           cd k8s-manifest-repo/overlays/dev/
-          kustomize edit set image ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+          kustomize edit set image \${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}=\${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}:\${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
     
       - name: Commit files
