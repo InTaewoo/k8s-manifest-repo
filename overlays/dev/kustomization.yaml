@@ -8,7 +8,7 @@ images:
   newName: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/
 - name: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server
   newName: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server
-  newTag: c1466ba2
+  newTag: 68ebe7dc
 resources:
 - ../../base
 patchesStrategicMerge:
