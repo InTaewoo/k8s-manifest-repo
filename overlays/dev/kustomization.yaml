@@ -3,7 +3,7 @@ kind: Kustomization
 images:
 - name: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server
   newName: 831926614723.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server
-  newTag: b392e97d
+  newTag: a537fdc5
 resources:
 - ../../base
 patchesStrategicMerge:
